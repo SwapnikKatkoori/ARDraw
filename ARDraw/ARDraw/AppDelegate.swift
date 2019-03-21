@@ -1,6 +1,6 @@
 //
 //  AppDelegate.swift
-//  ARDraw
+//  ArDraw
 //
 //  Created by Swapnik R. Katkoori on 3/21/19.
 //  Copyright © 2019 Swapnik R. Katkoori. All rights reserved.

@@ -1,6 +1,6 @@
 //
 //  ViewController.swift
-//  ARDraw
+//  ArDraw
 //
 //  Created by Swapnik R. Katkoori on 3/21/19.
 //  Copyright © 2019 Swapnik R. Katkoori. All rights reserved.
@@ -23,11 +23,32 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         // Show statistics such as fps and timing information
         sceneView.showsStatistics = true
         
-        // Create a new scene
-        let scene = SCNScene(named: "art.scnassets/ship.scn")!
-        
-        // Set the scene to the view
-        sceneView.scene = scene
+        let ball = SCNSphere(radius: 0.1)
+        let node = SCNNode()
+        let material = SCNMaterial()
+        material.diffuse.contents = UIColor.red
+        ball.materials = [material]
+        node.geometry = ball
+        node.position = SCNVector3Make(0, 0, -0.5)
+        sceneView.autoenablesDefaultLighting = true
+        sceneView.scene.rootNode.addChildNode(node)
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        // Create a session configuration
+        let configuration = ARWorldTrackingConfiguration()
+
+        // Run the view's session
+        sceneView.session.run(configuration)
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        
+        // Pause the view's session
+        sceneView.session.pause()
+    }
+
 }
