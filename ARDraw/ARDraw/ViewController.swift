@@ -14,6 +14,9 @@ class ViewController: UIViewController, ARSCNViewDelegate {
 
     @IBOutlet var sceneView: ARSCNView!
     
+    var x:Float = 0
+    var touched = false
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -22,18 +25,23 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         
         // Show statistics such as fps and timing information
         sceneView.showsStatistics = true
+        let drawButton = UIButton()
+        drawButton.frame = CGRect(x: 100, y: 700, width: 200, height: 100)
+        drawButton.setTitle("Draw", for: .normal)
+        drawButton.backgroundColor = UIColor.blue
+        drawButton.addTarget(self, action: #selector(endDraw), for: .touchUpInside)
+        drawButton.addTarget(self, action: #selector(startDraw), for: .touchDown)
+        view.addSubview(drawButton)
         
-        let ball = SCNSphere(radius: 0.1)
-        let node = SCNNode()
-        let material = SCNMaterial()
-        material.diffuse.contents = UIColor.red
-        ball.materials = [material]
-        node.geometry = ball
-        node.position = SCNVector3Make(0, 0, -0.5)
-        sceneView.autoenablesDefaultLighting = true
-        sceneView.scene.rootNode.addChildNode(node)
     }
     
+    @objc func endDraw(){
+        touched = false
+    }
+    
+    @objc func startDraw(){
+        touched = true
+    }
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
@@ -49,6 +57,21 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         
         // Pause the view's session
         sceneView.session.pause()
+    }
+    
+    func renderer(_ renderer: SCNSceneRenderer, updateAtTime time: TimeInterval) {
+        if touched == true{
+            let ball = SCNSphere(radius: 0.01)
+            let node = SCNNode()
+            let material = SCNMaterial()
+            material.diffuse.contents = UIColor.red
+            ball.materials = [material]
+            node.geometry = ball
+            node.position = SCNVector3Make(x, 0, -0.5)
+            sceneView.autoenablesDefaultLighting = true
+            sceneView.scene.rootNode.addChildNode(node)
+            x += 0.01
+        }
     }
 
 }
